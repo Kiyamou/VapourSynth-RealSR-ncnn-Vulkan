@@ -22,12 +22,14 @@ Models should be located in folder `models`, and folder `models` should be locat
 * ***tilesize_x***
   * Optional parameter. *Default: depands on video memory size*.
   * The tilesize for horizontal.
-  * Recommend to set a value that can divide the width.
+  * **Recommend to set as 100.**
+  * ~~Recommend to set a value that can divide the width.~~
   * Due to only supporting 4x scale, it is not recommended to set too large.
 * ***tilesize_y***
   * Optional parameter. *Default: same as tilesize_x*.
   * The tilesize for vertical.
-  * Recommend to set a value that can divide the height.
+  * **Recommend to set as 100.**
+  * ~~Recommend to set a value that can divide the height.~~
   * Due to only supporting 4x scale, it is not recommended to set too large.
 * ***gpu_id***
   * Optional parameter. *Default: 0*.
