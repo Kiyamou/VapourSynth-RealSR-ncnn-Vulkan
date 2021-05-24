@@ -1,5 +1,7 @@
 # VapourSynth-RealSR-ncnn-Vulkan
 
+[![Build Status](https://github.com/Kiyamou/VapourSynth-RealSR-ncnn-Vulkan/workflows/CI/badge.svg)](https://github.com/Kiyamou/VapourSynth-RealSR-ncnn-Vulkan/actions)
+
 RealSR super resolution for VapourSynth, based on [realsr-ncnn-vulkan](https://github.com/nihui/realsr-ncnn-vulkan). Some code is from [vapoursynth-waifu2x-ncnn-vulkan](https://github.com/Nlzy/vapoursynth-waifu2x-ncnn-vulkan).
 
 Due to only supporting 4x scale, the filter is slow.
@@ -32,7 +34,7 @@ Models should be located in folder `models`, and folder `models` should be locat
   * ~~Recommend to set a value that can divide the height.~~
   * Due to only supporting 4x scale, it is not recommended to set too large.
 * ***model***
-  * Optional parameter. *Default: 0*.
+  * Optional parameter. *Default: 1*.
   * Select pre-trained model:
     * model = 0: models-DF2K
     * model = 1: models-DF2K_JPEG

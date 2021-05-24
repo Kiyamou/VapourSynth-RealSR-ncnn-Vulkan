@@ -165,7 +165,11 @@ static void VS_CC filterCreate(const VSMap* in, VSMap* out, void* userData, VSCo
         const std::string pluginPath{ vsapi->getPluginPath(vsapi->getPluginById("com.vapoursynth.realsrnv", core)) };
         std::string paramPath{ pluginPath.substr(0, pluginPath.find_last_of('/')) };
         std::string modelPath{ pluginPath.substr(0, pluginPath.find_last_of('/')) };
+        
         int model = int64ToIntS(vsapi->propGetInt(in, "model", 0, &err));
+        if (err)
+            model = 1;
+        
         if (model == 0)
         {
             paramPath += "/models/models-DF2K/x4.param";
