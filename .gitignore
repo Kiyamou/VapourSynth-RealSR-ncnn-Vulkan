@@ -12,3 +12,4 @@ _deps
 
 # Build folder
 build/
+.vscode/

@@ -165,8 +165,19 @@ static void VS_CC filterCreate(const VSMap* in, VSMap* out, void* userData, VSCo
         const std::string pluginPath{ vsapi->getPluginPath(vsapi->getPluginById("com.vapoursynth.realsrnv", core)) };
         std::string paramPath{ pluginPath.substr(0, pluginPath.find_last_of('/')) };
         std::string modelPath{ pluginPath.substr(0, pluginPath.find_last_of('/')) };
-        paramPath += "/models/models-DF2K/x4.param";
-        modelPath += "/models/models-DF2K/x4.bin";
+        int model = int64ToIntS(vsapi->propGetInt(in, "model", 0, &err));
+        if (model == 0)
+        {
+            paramPath += "/models/models-DF2K/x4.param";
+            modelPath += "/models/models-DF2K/x4.bin";
+        }
+        else if (model == 1)
+        {
+            paramPath += "/models/models-DF2K_JPEG/x4.param";
+            modelPath += "/models/models-DF2K_JPEG/x4.bin";
+        }
+        else
+            throw std::string{ "invalid model type, please try 0 or 1" };
 
         // Check model file readable
         std::ifstream pf(paramPath);
@@ -268,6 +279,7 @@ VS_EXTERNAL_API(void) VapourSynthPluginInit(VSConfigPlugin configFunc, VSRegiste
                  "scale:int:opt;"
                  "tilesize_x:int:opt;"
                  "tilesize_y:int:opt;"
+                 "model:int:opt;"
                  "gpu_id:int:opt;"
                  "gpu_thread:int:opt;"
                  "tta:int:opt",

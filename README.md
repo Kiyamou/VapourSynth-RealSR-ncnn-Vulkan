@@ -8,7 +8,7 @@ Due to only supporting 4x scale, the filter is slow.
 
 ```python
 core.rsnv.RealSR(clip clip, [int scale, int tilesize_x, int tilesize_y,
-                 int gpu_id, int gpu_thread, bool tta])
+                 int model, int gpu_id, int gpu_thread, bool tta])
 ```
 
 Models should be located in folder `models`, and folder `models` should be located in the same folder as dynamic link library.
@@ -31,6 +31,11 @@ Models should be located in folder `models`, and folder `models` should be locat
   * **Recommend to set as 100.**
   * ~~Recommend to set a value that can divide the height.~~
   * Due to only supporting 4x scale, it is not recommended to set too large.
+* ***model***
+  * Optional parameter. *Default: 0*.
+  * Select pre-trained model:
+    * model = 0: models-DF2K
+    * model = 1: models-DF2K_JPEG
 * ***gpu_id***
   * Optional parameter. *Default: 0*.
   * If you have more than one gpu devices, you can select gpu device by the parameter.
