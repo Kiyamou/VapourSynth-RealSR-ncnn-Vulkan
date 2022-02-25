@@ -24,7 +24,7 @@ Models should be located in folder `models`, and folder `models` should be locat
 * ***tilesize_x***
   * Optional parameter. *Default: 100*.
   * The tilesize for horizontal.
-  * **Recommend to set as 100** to make sure the plugin run normally (#issue 3).
+  * **Recommend to set as 100** to make sure the plugin run normally (#issue 1).
   * ~~Recommend to set a value that can divide the width.~~
   * Due to only supporting 4x scale, it is not recommended to set too large.
 * ***tilesize_y***
