@@ -199,7 +199,7 @@ static void VS_CC filterCreate(const VSMap* in, VSMap* out, void* userData, VSCo
         // Tile size
         int tilesize_x = int64ToIntS(vsapi->propGetInt(in, "tilesize_x", 0, &err));
         if (err)
-            tilesize_x = 0;
+            tilesize_x = 100;
         if (tilesize_x != 0 && tilesize_x < 32)
             throw std::string{ "block_w must be >= 32 or set as 0" };
 
