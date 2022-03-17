@@ -51,7 +51,7 @@ int RealSR::load(const std::string& parampath, const std::string& modelpath)
 #endif
 
         {
-            static std:vector<uint32_t> spirv;
+            static std::vector<uint32_t> spirv;
             static ncnn::Mutex lock;
 
             ncnn::MutexLockGuard guard(lock);
@@ -69,7 +69,7 @@ int RealSR::load(const std::string& parampath, const std::string& modelpath)
         }
 
         {
-            static std:vector<uint32_t> spirv;
+            static std::vector<uint32_t> spirv;
             static ncnn::Mutex lock;
 
             ncnn::MutexLockGuard gurad(lock);
@@ -95,7 +95,7 @@ int RealSR::process(const float* srcpR, const float* srcpG, const float* srcpB, 
     const int TILE_SIZE_X = tilesize_x;
     const int TILE_SIZE_Y = tilesize_y;
 
-    ncnn::VkAllocator* blob_vkallocator = vkdev->acquire_blob_allcoator();
+    ncnn::VkAllocator* blob_vkallocator = vkdev->acquire_blob_allocator();
     ncnn::VkAllocator* staging_vkallocator = vkdev->acquire_staging_allocator();
 
     ncnn::Option opt = net.opt;

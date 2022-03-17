@@ -15,8 +15,8 @@ macro(realsr_add_shader SHADER_SRC)
     set(SHADER_COMP_HEADER ${CMAKE_CURRENT_BINARY_DIR}/${SHADER_SRC_NAME_WE}.comp.hex.h)
     add_custom_command(
             OUTPUT ${SHADER_COMP_HEADER}
-            COMMAND ${CMAKE_COMMAND} -DSHADER_SRC=${CMAKE_CURRENT_SOURCE_DIR}/${SHADER_SRC} -DSHADER_COMP_HEADER=${SHADER_COMP_HEADER} -p "${CMAKE_CURRENT_SOURCE_DIR}/src/generate_shader_comp_header.cmake"
-            DEPENDS ${SHADER_CURRENT_SOURCE_DIR}/${SHADER_SRC}
+            COMMAND ${CMAKE_COMMAND} -DSHADER_SRC=${CMAKE_CURRENT_SOURCE_DIR}/${SHADER_SRC} -DSHADER_COMP_HEADER=${SHADER_COMP_HEADER} -P "${CMAKE_CURRENT_SOURCE_DIR}/src/generate_shader_comp_header.cmake"
+            DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${SHADER_SRC}
             COMMENT "Preprocessing shader source ${SHADER_SRC_NAME_WE}.comp"
             VERBATIM
     )
