@@ -138,7 +138,7 @@ int RealSR::process(const float* srcpR, const float* srcpG, const float* srcpB, 
             }
         }
 
-        ncnn::VkCompute cmd(net.vulkan_device());
+        ncnn::VkCompute cmd(vkdev);
 
         // upload
         ncnn::VkMat in_gpu;
