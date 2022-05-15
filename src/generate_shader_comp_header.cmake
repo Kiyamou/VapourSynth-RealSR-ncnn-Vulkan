@@ -3,7 +3,7 @@
 
 file(READ ${SHADER_SRC} comp_data)
 
-# skip leading commnet
+# skip leading comment
 string(FIND "${comp_data}" "#version" version_start)
 string(SUBSTRING "${comp_data}" ${version_start} -1 comp_data)
 

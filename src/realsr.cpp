@@ -90,7 +90,7 @@ int RealSR::load(const std::string& parampath, const std::string& modelpath)
     return 0;
 }
 
-int RealSR::process(const float* srcpR, const float* srcpG, const float* srcpB, float* dstpR, float* dstpG, float* dstpB, int w, int h, int channels, int src_stride, int dst_stride) const
+int RealSR::process(const float* srcpR, const float* srcpG, const float* srcpB, float* dstpR, float* dstpG, float* dstpB, int width, int height, int channels, int src_stride, int dst_stride) const
 {
     const int TILE_SIZE_X = tilesize_x;
     const int TILE_SIZE_Y = tilesize_y;
@@ -104,30 +104,30 @@ int RealSR::process(const float* srcpR, const float* srcpG, const float* srcpB, 
     opt.staging_vkallocator = staging_vkallocator;
 
     // each tile 100x100
-    const int xtiles = (w + TILE_SIZE_X - 1) / TILE_SIZE_X;
-    const int ytiles = (h + TILE_SIZE_Y - 1) / TILE_SIZE_Y;
+    const int xtiles = (width + TILE_SIZE_X - 1) / TILE_SIZE_X;
+    const int ytiles = (height + TILE_SIZE_Y - 1) / TILE_SIZE_Y;
 
     const size_t in_out_tile_elemsize = opt.use_fp16_storage ? 2u : 4u;
 
     //#pragma omp parallel for num_threads(2)
     for (int yi = 0; yi < ytiles; yi++)
     {
-        const int tile_h_nopad = std::min((yi + 1) * TILE_SIZE_Y, h) - yi * TILE_SIZE_Y;
+        const int tile_h_nopad = std::min((yi + 1) * TILE_SIZE_Y, height) - yi * TILE_SIZE_Y;
 
         int in_tile_y0 = std::max(yi * TILE_SIZE_Y - prepadding, 0);
-        int in_tile_y1 = std::min((yi + 1) * TILE_SIZE_Y + prepadding, h);
-        const int in_tile_w = w;
+        int in_tile_y1 = std::min((yi + 1) * TILE_SIZE_Y + prepadding, height);
+        const int in_tile_w = width;
         const int in_tile_h = in_tile_y1 - in_tile_y0;
 
         ncnn::Mat in;
         in.create(in_tile_w, in_tile_h, channels, sizeof(float));
 
-        float *in_tile_r = in.channel(0);
-        float *in_tile_g = in.channel(1);
-        float *in_tile_b = in.channel(2);
-        const float *sr = srcpR + in_tile_y0 * src_stride;
-        const float *sg = srcpG + in_tile_y0 * src_stride;
-        const float *sb = srcpB + in_tile_y0 * src_stride;
+        float* in_tile_r = in.channel(0);
+        float* in_tile_g = in.channel(1);
+        float* in_tile_b = in.channel(2);
+        const float* sr = srcpR + in_tile_y0 * src_stride;
+        const float* sg = srcpG + in_tile_y0 * src_stride;
+        const float* sb = srcpB + in_tile_y0 * src_stride;
         for (int y = 0; y < in_tile_h; y++)
         {
             for (int x = 0; x < in_tile_w; x++)
@@ -153,14 +153,14 @@ int RealSR::process(const float* srcpR, const float* srcpG, const float* srcpB, 
         }
 
         int out_tile_y0 = std::max(yi * TILE_SIZE_Y, 0);
-        int out_tile_y1 = std::min((yi + 1) * TILE_SIZE_Y, h);
+        int out_tile_y1 = std::min((yi + 1) * TILE_SIZE_Y, height);
 
         ncnn::VkMat out_gpu;
-        out_gpu.create(w * scale, (out_tile_y1 - out_tile_y0) * scale, channels, sizeof(float), blob_vkallocator);
+        out_gpu.create(width * scale, (out_tile_y1 - out_tile_y0) * scale, channels, sizeof(float), blob_vkallocator);
 
         for (int xi = 0; xi < xtiles; xi++)
         {
-            const int tile_w_nopad = std::min((xi + 1) * TILE_SIZE_X, w) - xi * TILE_SIZE_X;
+            const int tile_w_nopad = std::min((xi + 1) * TILE_SIZE_X, width) - xi * TILE_SIZE_X;
 
             if (tta_mode)
             {
@@ -169,9 +169,9 @@ int RealSR::process(const float* srcpR, const float* srcpG, const float* srcpB, 
                 {
                     // crop tile
                     int tile_x0 = xi * TILE_SIZE_X - prepadding;
-                    int tile_x1 = std::min((xi + 1) * TILE_SIZE_X, w) + prepadding;
+                    int tile_x1 = std::min((xi + 1) * TILE_SIZE_X, width) + prepadding;
                     int tile_y0 = yi * TILE_SIZE_Y - prepadding;
-                    int tile_y1 = std::min((yi + 1) * TILE_SIZE_Y, h) + prepadding;
+                    int tile_y1 = std::min((yi + 1) * TILE_SIZE_Y, height) + prepadding;
 
                     in_tile_gpu[0].create(tile_x1 - tile_x0, tile_y1 - tile_y0, 3, in_out_tile_elemsize, 1, blob_vkallocator);
                     in_tile_gpu[1].create(tile_x1 - tile_x0, tile_y1 - tile_y0, 3, in_out_tile_elemsize, 1, blob_vkallocator);
@@ -275,9 +275,9 @@ int RealSR::process(const float* srcpR, const float* srcpG, const float* srcpB, 
                 {
                     // crop tile
                     int tile_x0 = xi * TILE_SIZE_X - prepadding;
-                    int tile_x1 = std::min((xi + 1) * TILE_SIZE_X, w) + prepadding;
+                    int tile_x1 = std::min((xi + 1) * TILE_SIZE_X, width) + prepadding;
                     int tile_y0 = yi * TILE_SIZE_Y - prepadding;
-                    int tile_y1 = std::min((yi + 1) * TILE_SIZE_Y, h) + prepadding;
+                    int tile_y1 = std::min((yi + 1) * TILE_SIZE_Y, height) + prepadding;
 
                     in_tile_gpu.create(tile_x1 - tile_x0, tile_y1 - tile_y0, 3, in_out_tile_elemsize, 1, blob_vkallocator);
 

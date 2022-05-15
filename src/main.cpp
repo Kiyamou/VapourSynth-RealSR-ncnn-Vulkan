@@ -140,7 +140,9 @@ static void VS_CC filterCreate(const VSMap* in, VSMap* out, void* userData, VSCo
         std::lock_guard<std::mutex> guard(g_lock);
 
         if (g_filter_instance_count == 0)
+        {
             ncnn::create_gpu_instance();
+        }
 
         g_filter_instance_count++;
     }
@@ -156,7 +158,7 @@ static void VS_CC filterCreate(const VSMap* in, VSMap* out, void* userData, VSCo
         if (err)
             scale = 4;
         if (scale != 4)
-            throw std::string { "model is only supported 4 scale" };
+            throw std::string{ "model is only supported 4 scale" };
 
         d->target_width = d->vi->width * scale;
         d->target_height = d->vi->height * scale;
@@ -201,13 +203,13 @@ static void VS_CC filterCreate(const VSMap* in, VSMap* out, void* userData, VSCo
         if (err)
             tilesize_x = 100;
         if (tilesize_x != 0 && tilesize_x < 32)
-            throw std::string{ "block_w must be >= 32 or set as 0" };
+            throw std::string{ "tilesize_x must be >= 32 or set as 0" };
 
         int tilesize_y = int64ToIntS(vsapi->propGetInt(in, "tilesize_y", 0, &err));
         if (err)
             tilesize_y = tilesize_x;
         if (tilesize_y != 0 && tilesize_y < 32)
-            throw std::string{ "block_h must be >= 32 or set as 0" };
+            throw std::string{ "tilesize_y must be >= 32 or set as 0" };
 
         // More fine-grained tilesize policy here
         uint32_t heap_budget = ncnn::get_gpu_device(gpuId)->get_heap_budget();
