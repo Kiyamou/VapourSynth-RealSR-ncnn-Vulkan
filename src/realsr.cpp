@@ -64,7 +64,7 @@ int RealSR::load(const std::string& parampath, const std::string& modelpath)
             }
 
             realsr_preproc = new ncnn::Pipeline(vkdev);
-            realsr_preproc->set_optimal_local_size_xyz(8, 3, 3);
+            realsr_preproc->set_optimal_local_size_xyz(8, 8, 3);
             realsr_preproc->create(spirv.data(), spirv.size() * 4, specializations);
         }
 
@@ -82,7 +82,7 @@ int RealSR::load(const std::string& parampath, const std::string& modelpath)
             }
 
             realsr_postproc = new ncnn::Pipeline(vkdev);
-            realsr_postproc->set_optimal_local_size_xyz(8, 3, 3);
+            realsr_postproc->set_optimal_local_size_xyz(8, 8, 3);
             realsr_postproc->create(spirv.data(), spirv.size() * 4, specializations);
         }
     }
