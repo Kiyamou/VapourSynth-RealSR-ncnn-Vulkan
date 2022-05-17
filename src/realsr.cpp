@@ -388,7 +388,7 @@ int RealSR::process(const float* srcpR, const float* srcpG, const float* srcpB, 
     }
 
     vkdev->reclaim_blob_allocator(blob_vkallocator);
-    vkdev->reclaim_blob_allocator(staging_vkallocator);
+    vkdev->reclaim_staging_allocator(staging_vkallocator);
 
     return 0;
 }
