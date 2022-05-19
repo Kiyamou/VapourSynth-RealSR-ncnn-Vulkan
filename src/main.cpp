@@ -71,7 +71,7 @@ static void process(const VSFrameRef* src, VSFrameRef* dst, const FilterData* co
         float* VS_RESTRICT dstpB = reinterpret_cast<float*>(vsapi->getWritePtr(dst, 2));
 
         d->gpuSemaphore->wait();
-        d->realsr->process(srcpR, srcpG, srcpB, dstpR, dstpG, dstpB, src_width, src_height, d->vi->format->numPlanes, src_stirde, dst_stride);
+        d->realsr->process(srcpR, srcpG, srcpB, dstpR, dstpG, dstpB, src_width, src_height, src_stirde, dst_stride);
         d->gpuSemaphore->signal();
     }
 }

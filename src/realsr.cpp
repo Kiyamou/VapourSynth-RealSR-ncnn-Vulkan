@@ -90,7 +90,7 @@ int RealSR::load(const std::string& parampath, const std::string& modelpath)
     return 0;
 }
 
-int RealSR::process(const float* srcpR, const float* srcpG, const float* srcpB, float* dstpR, float* dstpG, float* dstpB, int width, int height, int channels, int src_stride, int dst_stride) const
+int RealSR::process(const float* srcpR, const float* srcpG, const float* srcpB, float* dstpR, float* dstpG, float* dstpB, int width, int height, int src_stride, int dst_stride) const
 {
     const int TILE_SIZE_X = tilesize_x;
     const int TILE_SIZE_Y = tilesize_y;
@@ -120,7 +120,7 @@ int RealSR::process(const float* srcpR, const float* srcpG, const float* srcpB, 
         const int in_tile_h = in_tile_y1 - in_tile_y0;
 
         ncnn::Mat in;
-        in.create(in_tile_w, in_tile_h, channels, sizeof(float));
+        in.create(in_tile_w, in_tile_h, CHANNELS, sizeof(float));
 
         float* in_tile_r = in.channel(0);
         float* in_tile_g = in.channel(1);
@@ -156,7 +156,7 @@ int RealSR::process(const float* srcpR, const float* srcpG, const float* srcpB, 
         int out_tile_y1 = std::min((yi + 1) * TILE_SIZE_Y, height);
 
         ncnn::VkMat out_gpu;
-        out_gpu.create(width * scale, (out_tile_y1 - out_tile_y0) * scale, channels, sizeof(float), blob_vkallocator);
+        out_gpu.create(width * scale, (out_tile_y1 - out_tile_y0) * scale, CHANNELS, sizeof(float), blob_vkallocator);
 
         for (int xi = 0; xi < xtiles; xi++)
         {
@@ -204,12 +204,12 @@ int RealSR::process(const float* srcpR, const float* srcpG, const float* srcpB, 
                     constants[7].i = prepadding;
                     constants[8].i = xi * TILE_SIZE_X;
                     constants[9].i = std::min(yi * TILE_SIZE_Y, prepadding);
-                    constants[10].i = channels;
+                    constants[10].i = CHANNELS;
 
                     ncnn::VkMat dispatcher;
                     dispatcher.w = in_tile_gpu[0].w;
                     dispatcher.h = in_tile_gpu[0].h;
-                    dispatcher.c = channels;
+                    dispatcher.c = CHANNELS;
 
                     cmd.record_pipeline(realsr_preproc, bindings, constants, dispatcher);
                 }
@@ -258,12 +258,12 @@ int RealSR::process(const float* srcpR, const float* srcpG, const float* srcpB, 
                     constants[7].i = std::min(TILE_SIZE_X * scale, out_gpu.w - xi * TILE_SIZE_X * scale);
                     constants[8].i = prepadding * scale;
                     constants[9].i = prepadding * scale;
-                    constants[10].i = channels;
+                    constants[10].i = CHANNELS;
 
                     ncnn::VkMat dispatcher;
                     dispatcher.w = std::min(TILE_SIZE_X * scale, out_gpu.w - xi * TILE_SIZE_X * scale);
                     dispatcher.h = out_gpu.h;
-                    dispatcher.c = channels;
+                    dispatcher.c = CHANNELS;
 
                     cmd.record_pipeline(realsr_postproc, bindings, constants, dispatcher);
                 }
@@ -296,12 +296,12 @@ int RealSR::process(const float* srcpR, const float* srcpG, const float* srcpB, 
                     constants[7].i = prepadding;
                     constants[8].i = xi * TILE_SIZE_X;
                     constants[9].i = std::min(yi * TILE_SIZE_Y, prepadding);
-                    constants[10].i = channels;
+                    constants[10].i = CHANNELS;
 
                     ncnn::VkMat dispatcher;
                     dispatcher.w = in_tile_gpu.w;
                     dispatcher.h = in_tile_gpu.h;
-                    dispatcher.c = channels;
+                    dispatcher.c = CHANNELS;
 
                     cmd.record_pipeline(realsr_preproc, bindings, constants, dispatcher);
                 }
@@ -337,12 +337,12 @@ int RealSR::process(const float* srcpR, const float* srcpG, const float* srcpB, 
                     constants[7].i = std::min(TILE_SIZE_X * scale, out_gpu.w - xi * TILE_SIZE_X * scale);
                     constants[8].i = prepadding * scale;
                     constants[9].i = prepadding * scale;
-                    constants[10].i = channels;
+                    constants[10].i = CHANNELS;
 
                     ncnn::VkMat dispatcher;
                     dispatcher.w = std::min(TILE_SIZE_X * scale, out_gpu.w - xi * TILE_SIZE_X * scale);
                     dispatcher.h = out_gpu.h;
-                    dispatcher.c = channels;
+                    dispatcher.c = CHANNELS;
 
                     cmd.record_pipeline(realsr_postproc, bindings, constants, dispatcher);
                 }
@@ -365,22 +365,21 @@ int RealSR::process(const float* srcpR, const float* srcpG, const float* srcpB, 
 
             if (!(opt.use_fp16_storage && opt.use_int8_storage))
             {
-                if (channels == 3)
+                const float* out_tile_r = out.channel(0);
+                const float* out_tile_g = out.channel(1);
+                const float* out_tile_b = out.channel(2);
+
+                float* dr = dstpR + yi * TILE_SIZE_Y * scale * dst_stride;
+                float* dg = dstpG + yi * TILE_SIZE_Y * scale * dst_stride;
+                float* db = dstpB + yi * TILE_SIZE_Y * scale * dst_stride;
+
+                for (int y = 0; y < out.h; y++)
                 {
-                    const float* out_tile_r = out.channel(0);
-                    const float* out_tile_g = out.channel(1);
-                    const float* out_tile_b = out.channel(2);
-                    float* dr = dstpR + yi * TILE_SIZE_Y * scale * dst_stride;
-                    float* dg = dstpG + yi * TILE_SIZE_Y * scale * dst_stride;
-                    float* db = dstpB + yi * TILE_SIZE_Y * scale * dst_stride;
-                    for (int y = 0; y < out.h; y++)
+                    for (int x = 0; x < out.w; x++)
                     {
-                        for (int x = 0; x < out.w; x++)
-                        {
-                            dr[dst_stride * y + x] = std::min(1.f, std::max(0.f, out_tile_r[out.w * y + x] / 255.f));
-                            dg[dst_stride * y + x] = std::min(1.f, std::max(0.f, out_tile_g[out.w * y + x] / 255.f));
-                            db[dst_stride * y + x] = std::min(1.f, std::max(0.f, out_tile_b[out.w * y + x] / 255.f));
-                        }
+                        dr[dst_stride * y + x] = std::min(1.f, std::max(0.f, out_tile_r[out.w * y + x] / 255.f));
+                        dg[dst_stride * y + x] = std::min(1.f, std::max(0.f, out_tile_g[out.w * y + x] / 255.f));
+                        db[dst_stride * y + x] = std::min(1.f, std::max(0.f, out_tile_b[out.w * y + x] / 255.f));
                     }
                 }
             }
