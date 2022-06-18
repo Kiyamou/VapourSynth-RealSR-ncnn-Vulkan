@@ -1,6 +1,6 @@
 // realsr implemented with ncnn library
 
-#include "realsr.h"
+#include "realsr.hpp"
 
 #include <algorithm>
 #include <vector>
@@ -173,14 +173,14 @@ int RealSR::process(const float* srcpR, const float* srcpG, const float* srcpB, 
                     int tile_y0 = yi * TILE_SIZE_Y - prepadding;
                     int tile_y1 = std::min((yi + 1) * TILE_SIZE_Y, height) + prepadding;
 
-                    in_tile_gpu[0].create(tile_x1 - tile_x0, tile_y1 - tile_y0, 3, in_out_tile_elemsize, 1, blob_vkallocator);
-                    in_tile_gpu[1].create(tile_x1 - tile_x0, tile_y1 - tile_y0, 3, in_out_tile_elemsize, 1, blob_vkallocator);
-                    in_tile_gpu[2].create(tile_x1 - tile_x0, tile_y1 - tile_y0, 3, in_out_tile_elemsize, 1, blob_vkallocator);
-                    in_tile_gpu[3].create(tile_x1 - tile_x0, tile_y1 - tile_y0, 3, in_out_tile_elemsize, 1, blob_vkallocator);
-                    in_tile_gpu[4].create(tile_y1 - tile_y0, tile_x1 - tile_x0, 3, in_out_tile_elemsize, 1, blob_vkallocator);
-                    in_tile_gpu[5].create(tile_y1 - tile_y0, tile_x1 - tile_x0, 3, in_out_tile_elemsize, 1, blob_vkallocator);
-                    in_tile_gpu[6].create(tile_y1 - tile_y0, tile_x1 - tile_x0, 3, in_out_tile_elemsize, 1, blob_vkallocator);
-                    in_tile_gpu[7].create(tile_y1 - tile_y0, tile_x1 - tile_x0, 3, in_out_tile_elemsize, 1, blob_vkallocator);
+                    in_tile_gpu[0].create(tile_x1 - tile_x0, tile_y1 - tile_y0, CHANNELS, in_out_tile_elemsize, 1, blob_vkallocator);
+                    in_tile_gpu[1].create(tile_x1 - tile_x0, tile_y1 - tile_y0, CHANNELS, in_out_tile_elemsize, 1, blob_vkallocator);
+                    in_tile_gpu[2].create(tile_x1 - tile_x0, tile_y1 - tile_y0, CHANNELS, in_out_tile_elemsize, 1, blob_vkallocator);
+                    in_tile_gpu[3].create(tile_x1 - tile_x0, tile_y1 - tile_y0, CHANNELS, in_out_tile_elemsize, 1, blob_vkallocator);
+                    in_tile_gpu[4].create(tile_y1 - tile_y0, tile_x1 - tile_x0, CHANNELS, in_out_tile_elemsize, 1, blob_vkallocator);
+                    in_tile_gpu[5].create(tile_y1 - tile_y0, tile_x1 - tile_x0, CHANNELS, in_out_tile_elemsize, 1, blob_vkallocator);
+                    in_tile_gpu[6].create(tile_y1 - tile_y0, tile_x1 - tile_x0, CHANNELS, in_out_tile_elemsize, 1, blob_vkallocator);
+                    in_tile_gpu[7].create(tile_y1 - tile_y0, tile_x1 - tile_x0, CHANNELS, in_out_tile_elemsize, 1, blob_vkallocator);
 
                     std::vector<ncnn::VkMat> bindings(9);
                     bindings[0] = in_gpu;

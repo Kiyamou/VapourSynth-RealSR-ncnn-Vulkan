@@ -1,7 +1,7 @@
 // realsr implemented with ncnn library
 
-#ifndef REALSR_H
-#define REALSR_H
+#ifndef REALSR_HPP
+#define REALSR_HPP
 
 #include <string>
 
@@ -35,4 +35,4 @@ private:
     bool tta_mode;
 };
 
-#endif // REALSR_H
+#endif // REALSR_HPP

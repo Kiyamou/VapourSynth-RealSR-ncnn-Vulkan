@@ -7,7 +7,7 @@
 #include <condition_variable>
 #include <fstream>
 
-#include "realsr.h"
+#include "realsr.hpp"
 
 #include "VapourSynth.h"
 #include "VSHelper.h"
