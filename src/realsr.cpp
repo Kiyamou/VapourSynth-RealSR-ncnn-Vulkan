@@ -32,7 +32,7 @@ int RealSR::load(const std::string& parampath, const std::string& modelpath)
     net.opt.use_fp16_packed = true;
     net.opt.use_fp16_storage = true;
     net.opt.use_fp16_arithmetic = false;
-    net.opt.use_int8_storage = false;  // true
+    net.opt.use_int8_storage = false;
     net.opt.use_int8_arithmetic = false;
 
     net.set_vulkan_device(vkdev);
