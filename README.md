@@ -56,7 +56,6 @@ Models should be located in folder `models`, and folder `models` should be locat
 ```bash
 git clone https://github.com/Kiyamou/VapourSynth-RealSR-ncnn-Vulkan.git
 cd VapourSynth-RealSR-ncnn-Vulkan
-git submodule update --init --recursive
 
 mkdir build && cd build
 cmake -G "NMake Makefiles" ..
@@ -72,7 +71,6 @@ cmake --build .
 ```bash
 git clone https://github.com/Kiyamou/VapourSynth-RealSR-ncnn-Vulkan.git
 cd VapourSynth-RealSR-ncnn-Vulkan
-git submodule update --init --recursive
 
 mkdir build && cd build
 cmake ..
