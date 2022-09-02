@@ -54,7 +54,7 @@ Models should be located in folder `models`, and folder `models` should be locat
 2.If your VapourSynth is installed in `C:\Program Files\VapourSynth` , you can run the following command directly. Otherwise use `cmake -G "NMake Makefiles" -DVAPOURSYNTH_INCLUDE_DIR=Path/To/vapoursynth/sdk/include/vapoursynth ..` in the second-to-last step.
 
 ```bash
-git clone https://github.com/Kiyamou/VapourSynth-RealSR-ncnn-Vulkan.git
+git clone --recursive https://github.com/Kiyamou/VapourSynth-RealSR-ncnn-Vulkan.git
 cd VapourSynth-RealSR-ncnn-Vulkan
 
 mkdir build && cd build
@@ -69,7 +69,7 @@ cmake --build .
 2.If your VapourSynth is installed in `usr/local` , you can run the following command directly. Otherwise use `cmake -DVAPOURSYNTH_INCLUDE_DIR=Path/To/vapoursynth ..` in the second-to-last step.
 
 ```bash
-git clone https://github.com/Kiyamou/VapourSynth-RealSR-ncnn-Vulkan.git
+git clone --recursive https://github.com/Kiyamou/VapourSynth-RealSR-ncnn-Vulkan.git
 cd VapourSynth-RealSR-ncnn-Vulkan
 
 mkdir build && cd build
