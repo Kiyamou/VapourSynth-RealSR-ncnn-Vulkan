@@ -63,6 +63,15 @@ jobs:
       - name: build
         run: cmake --build build -j 2
 
+      - name: strip
+        run: strip build/librealsrnv.so
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-vapoursynth-realsr-ncnn-vulkan
+          path: build/librealsrnv.so
+
   build-windows:
 
     runs-on: windows-latest
@@ -102,3 +111,12 @@ jobs:
 
       - name: build
         run: cmake --build build -j 2
+
+      - name: strip
+        run: strip build/Debug/realsrnv.dll
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-vapoursynth-realsr-ncnn-vulkan
+          path: build/Debug/realsrnv.dll
